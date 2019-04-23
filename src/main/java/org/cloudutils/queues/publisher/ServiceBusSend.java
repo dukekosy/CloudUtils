@@ -6,6 +6,7 @@ import com.microsoft.azure.servicebus.Message;
 import com.microsoft.azure.servicebus.TopicClient;
 import com.microsoft.azure.servicebus.primitives.ConnectionStringBuilder;
 import com.microsoft.azure.servicebus.primitives.ServiceBusException;
+import org.cloudutils.queues.ServiceBus.MessageBuilder;
 import org.cloudutils.queues.config.ConfigDev;
 
 import java.nio.charset.StandardCharsets;
@@ -29,37 +30,32 @@ public final class ServiceBusSend implements Publisher {
 
     private final Gson GSON = new Gson();
 
-    public void publish(final String queueName, final String json) throws ServiceBusException, InterruptedException {
+    public void publish(final String queueName, final MessageBuilder message) throws ServiceBusException, InterruptedException {
 
         TopicClient sendClient = new TopicClient(new ConnectionStringBuilder(ConfigDev.getInstance()
                                                                                       .getServiceBusConfig()
                                                                                       .connectionString()
                                                                                       .orElseThrow(
-                                                                                              () -> new MissingResourceException("rfhdg",
+                                                                                              () -> new MissingResourceException("Connection string is missing for message : " + message.message(),
                                                                                                                                  "Config",
                                                                                                                                  "connectionString")),
                                                                              queueName));
-        sendMessagesAsync(sendClient, json).thenRunAsync(() -> sendClient.closeAsync());
+        sendMessagesAsync(sendClient, message).thenRunAsync(() -> sendClient.closeAsync());
     }
 
-    public void publishDelayed(String queueName, String json, long delay) {
+    public void publishDelayed(String queueName, MessageBuilder message, long delay) {
 
     }
 
-    private CompletableFuture<Void> sendMessagesAsync(TopicClient sendClient, String json) {
+    private CompletableFuture<Void> sendMessagesAsync(TopicClient sendClient, MessageBuilder messageBuilder) {
         List<HashMap<String, String>> data =
-                GSON.fromJson(json,
+                GSON.fromJson(messageBuilder.message(),
                               new TypeToken<List<HashMap<String, String>>>() {
                               }.getType());
 
         List<CompletableFuture> tasks = new ArrayList<>();
         for (int i = 0; i < data.size(); i++) {
-            final String messageId = Integer.toString(i);
-            Message message = new Message(json.getBytes(StandardCharsets.UTF_8));
-            message.setContentType("application/json");
-            message.setLabel("Scientist");
-            message.setMessageId(messageId);
-            message.setTimeToLive(Duration.ofMinutes(2));
+            Message message = messageBuilder.toMessage();
             System.out.printf("Message sending: Id = %s\n", message.getMessageId());
             tasks.add(
                     sendClient.sendAsync(message).thenRunAsync(() -> {
