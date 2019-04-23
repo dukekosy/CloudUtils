@@ -1,4 +1,4 @@
-package org.cloudutils.subcriber;
+package org.cloudutils.queues.subcriber;
 
 public interface Subscriber {
 
