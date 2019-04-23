@@ -1,4 +1,4 @@
-package org.cloudutils.publisher;
+package org.cloudutils.queues.publisher;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -6,22 +6,39 @@ import com.microsoft.azure.servicebus.Message;
 import com.microsoft.azure.servicebus.TopicClient;
 import com.microsoft.azure.servicebus.primitives.ConnectionStringBuilder;
 import com.microsoft.azure.servicebus.primitives.ServiceBusException;
+import org.cloudutils.queues.config.ConfigDev;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.concurrent.CompletableFuture;
 
 public final class ServiceBusSend implements Publisher {
 
-    private static final Gson GSON = new Gson();
+    private ServiceBusSend() {
+    }
+
+    private static final ServiceBusSend instance = new ServiceBusSend();
+
+    public static ServiceBusSend getInstance() {
+        return instance;
+    }
+
+    private final Gson GSON = new Gson();
 
     public void publish(final String queueName, final String json) throws ServiceBusException, InterruptedException {
-        String connectionString = "Endpoint=sb://<NameOfServiceBusNamespace>.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=<AccessKey>";
-        TopicClient sendClient = new TopicClient(new ConnectionStringBuilder(connectionString, queueName));
+
+        TopicClient sendClient = new TopicClient(new ConnectionStringBuilder(ConfigDev.getInstance()
+                                                                                      .getServiceBusConfig()
+                                                                                      .connectionString()
+                                                                                      .orElseThrow(
+                                                                                              () -> new MissingResourceException("rfhdg",
+                                                                                                                                 "Config",
+                                                                                                                                 "connectionString")),
+                                                                             queueName));
         sendMessagesAsync(sendClient, json).thenRunAsync(() -> sendClient.closeAsync());
     }
 
@@ -33,12 +50,12 @@ public final class ServiceBusSend implements Publisher {
         List<HashMap<String, String>> data =
                 GSON.fromJson(json,
                               new TypeToken<List<HashMap<String, String>>>() {
-                        }.getType());
+                              }.getType());
 
         List<CompletableFuture> tasks = new ArrayList<>();
         for (int i = 0; i < data.size(); i++) {
             final String messageId = Integer.toString(i);
-            Message message = new Message(GSON.toJson(data.get(i), Map.class).getBytes(StandardCharsets.UTF_8));
+            Message message = new Message(json.getBytes(StandardCharsets.UTF_8));
             message.setContentType("application/json");
             message.setLabel("Scientist");
             message.setMessageId(messageId);

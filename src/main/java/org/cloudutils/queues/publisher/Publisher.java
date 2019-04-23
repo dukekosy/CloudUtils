@@ -1,4 +1,4 @@
-package org.cloudutils.publisher;
+package org.cloudutils.queues.publisher;
 
 
 import com.microsoft.azure.servicebus.primitives.ServiceBusException;
