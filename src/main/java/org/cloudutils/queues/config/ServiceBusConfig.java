@@ -2,14 +2,12 @@ package org.cloudutils.queues.config;
 
 import com.google.auto.value.AutoValue;
 
-import java.util.Optional;
-
 @AutoValue
 public abstract class ServiceBusConfig {
+    //Builder pattern for all config classes, most of which will have more than one configuration property
+    public abstract String connectionString();
 
-    public abstract Optional<String> connectionString();
-
-    public static ServiceBusConfig create(Optional<String> connectionString) {
+    public static ServiceBusConfig create(String connectionString) {
         return builder()
                 .connectionString(connectionString)
                 .build();
@@ -21,7 +19,7 @@ public abstract class ServiceBusConfig {
 
     @AutoValue.Builder
     public abstract static class Builder {
-        public abstract Builder connectionString(Optional<String> connectionString);
+        public abstract Builder connectionString(String connectionString);
 
         public abstract ServiceBusConfig build();
     }

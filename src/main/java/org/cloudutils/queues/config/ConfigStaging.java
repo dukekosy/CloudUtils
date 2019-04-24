@@ -2,14 +2,15 @@ package org.cloudutils.queues.config;
 
 import java.util.Optional;
 
-public class ConfigDev implements Config {
+public class ConfigStaging implements Config {
+
     //singleton used to maintain one configuration instance application wide
-    private ConfigDev() {
+    private ConfigStaging() {
     }
 
-    private static final ConfigDev instance = new ConfigDev();
+    private static final ConfigStaging instance = new ConfigStaging();
 
-    public static ConfigDev getInstance() {
+    public static ConfigStaging getInstance() {
         return instance;
     }
 
@@ -24,4 +25,5 @@ public class ConfigDev implements Config {
     public void setServiceBusConnectionString(String serviceBusConnectionString) {
         this.serviceBusConfig = Optional.of(ServiceBusConfig.builder().connectionString(serviceBusConnectionString).build());
     }
+
 }

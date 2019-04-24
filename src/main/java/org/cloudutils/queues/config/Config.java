@@ -1,5 +1,11 @@
 package org.cloudutils.queues.config;
 
+import java.util.Optional;
+
 public interface Config {
-    ServiceBusConfig getServiceBusConfig();
+    Optional<ServiceBusConfig> getServiceBusConfig();
+    //define Optional memcache config
+    //define Optional redis config
+    //define Optional jdbc config
+    //define Optional NoSQL config
 }

@@ -1,4 +1,4 @@
-package org.cloudutils.queues.ServiceBus;
+package org.cloudutils.queues.publisher;
 
 import com.google.auto.value.AutoValue;
 import com.microsoft.azure.servicebus.Message;
