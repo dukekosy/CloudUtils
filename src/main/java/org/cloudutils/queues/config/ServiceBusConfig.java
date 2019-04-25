@@ -17,6 +17,12 @@ public abstract class ServiceBusConfig {
         return new AutoValue_ServiceBusConfig.Builder();
     }
 
+    public static ServiceBusConfig.Builder testBuilder() {
+        return builder()
+                .connectionString(
+                        "Endpoint=sb://<NameOfServiceBusNamespace>.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=<AccessKey>");
+    }
+
     @AutoValue.Builder
     public abstract static class Builder {
         public abstract Builder connectionString(String connectionString);

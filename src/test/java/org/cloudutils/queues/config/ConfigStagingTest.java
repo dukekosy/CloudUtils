@@ -8,7 +8,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertTrue;
 
-public class ConfigDevTest {
+public class ConfigStagingTest {
 
     @Before
     public void setup() {
@@ -16,9 +16,8 @@ public class ConfigDevTest {
 
     @Test
     public void getServiceBusConfig_fetchServiceBusConfigWhenSet_returnsValidConfiguration() {
-        ConfigDev.getInstance().setServiceBusConnectionString(UUID.randomUUID().toString());
-        Optional<ServiceBusConfig> serviceBusConfig = ConfigDev.getInstance().getServiceBusConfig();
+        ConfigStaging.getInstance().setServiceBusConnectionString(UUID.randomUUID().toString());
+        Optional<ServiceBusConfig> serviceBusConfig = ConfigStaging.getInstance().getServiceBusConfig();
         assertTrue(serviceBusConfig.isPresent());
     }
-
 }

@@ -13,8 +13,9 @@ public class ConfigDev implements Config {
         return instance;
     }
 
-    Optional<ServiceBusConfig> serviceBusConfig;
+    Optional<ServiceBusConfig> serviceBusConfig = Optional.empty();
 
+    //used instead of property files so multiple organisations can configure accordingly
     @Override
     public Optional<ServiceBusConfig> getServiceBusConfig() {
         return serviceBusConfig;

@@ -2,7 +2,7 @@ package org.cloudutils.queues.config;
 
 import java.util.Optional;
 
-public class ConfigStaging implements Config {
+public final class ConfigStaging implements Config {
 
     //singleton used to maintain one configuration instance application wide
     private ConfigStaging() {
@@ -14,7 +14,7 @@ public class ConfigStaging implements Config {
         return instance;
     }
 
-    Optional<ServiceBusConfig> serviceBusConfig;
+    Optional<ServiceBusConfig> serviceBusConfig = Optional.empty();
 
     @Override
     public Optional<ServiceBusConfig> getServiceBusConfig() {
