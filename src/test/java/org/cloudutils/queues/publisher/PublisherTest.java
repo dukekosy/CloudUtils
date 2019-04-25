@@ -1,10 +1,9 @@
 package org.cloudutils.queues.publisher;
 
 import com.microsoft.azure.servicebus.primitives.ServiceBusException;
-import org.cloudutils.queues.config.ConfigDev;
-import org.cloudutils.queues.config.ServiceBusConfig;
+import org.cloudutils.config.ConfigDev;
+import org.cloudutils.config.ServiceBusConfig;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.reflect.Whitebox;

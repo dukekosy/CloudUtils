@@ -4,7 +4,7 @@ import com.microsoft.azure.servicebus.Message;
 import com.microsoft.azure.servicebus.TopicClient;
 import com.microsoft.azure.servicebus.primitives.ConnectionStringBuilder;
 import com.microsoft.azure.servicebus.primitives.ServiceBusException;
-import org.cloudutils.queues.config.ConfigDev;
+import org.cloudutils.config.ConfigDev;
 
 import java.util.ArrayList;
 import java.util.List;

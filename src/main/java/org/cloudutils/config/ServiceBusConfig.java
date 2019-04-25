@@ -1,4 +1,4 @@
-package org.cloudutils.queues.config;
+package org.cloudutils.config;
 
 import com.google.auto.value.AutoValue;
 
