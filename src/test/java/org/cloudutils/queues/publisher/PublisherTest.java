@@ -4,6 +4,7 @@ import com.microsoft.azure.servicebus.primitives.ServiceBusException;
 import org.cloudutils.config.ConfigDev;
 import org.cloudutils.config.ServiceBusConfig;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.reflect.Whitebox;
@@ -42,16 +43,17 @@ public class PublisherTest {
 
     }
 
-    @Test(expected = MissingResourceException.class)
+    @Ignore("Integration Test")
+    @Test
     public void publish_successfully() throws ServiceBusException, InterruptedException {
 
         PowerMockito.when(configDev.getServiceBusConfig())
                     .thenReturn(Optional.of(ServiceBusConfig.testBuilder()
                                                             .connectionString(
-                                                                    "Endpoint=sb://abc.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=<AccessKey>")
+                                                                    "Endpoint=sb://cloudutils.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=/123/4/5678")
                                                             .build()));
 
-        ServiceBusSend.getInstance().publish(UUID.randomUUID().toString(), MessageBuilder.testBuilder().build());
+        ServiceBusSend.getInstance().publish("location", MessageBuilder.testBuilder().build());
 
     }
 }

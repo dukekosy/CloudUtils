@@ -38,7 +38,7 @@ public abstract class MessageBuilder {
 
     public static MessageBuilder.Builder testBuilder() {
         return builder()
-                .message(UUID.randomUUID().toString())
+                .message("{\"latitude\":\"49.90\",\"longitude\":\"-97.13\"}")
                 .contentType(UUID.randomUUID().toString())
                 .label(Optional.of(UUID.randomUUID().toString()))
                 .messageId(UUID.randomUUID().toString())
