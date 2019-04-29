@@ -12,19 +12,18 @@ import org.powermock.reflect.Whitebox;
 
 import java.util.MissingResourceException;
 import java.util.Optional;
-import java.util.UUID;
 
 public class PublisherTest {
 
     ConfigDev configDev;
     String connectionString;
-    String queueName;
+    String topic;
 
 
     @Before
     public void setup() {
         connectionString = "Endpoint=sb://cloudutils.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=QOVVfAJXtfN0NVE2IW9N1Wy13sbXFpXiHdxjM+6SuM0=";
-        queueName = "location";
+        topic = "location";
         configDev = PowerMockito.mock(ConfigDev.class);
 
         Whitebox.setInternalState(ConfigDev.class, "instance", configDev);
@@ -36,7 +35,7 @@ public class PublisherTest {
         PowerMockito.when(configDev.getServiceBusConfig()).thenReturn(Optional.of(ServiceBusConfig.testBuilder()
                                                                                                   .connectionString(connectionString)
                                                                                                   .build()));
-        ServiceBusSend.getInstance().publish(UUID.randomUUID().toString(), MessageBuilder.testBuilder().message("").build());
+        ServiceBusSend.getInstance().publish(topic, MessageBuilder.testBuilder().message("").build());
     }
 
     @Test(expected = MissingResourceException.class)
@@ -45,7 +44,7 @@ public class PublisherTest {
         PowerMockito.when(configDev.getServiceBusConfig())
                     .thenReturn(Optional.empty());
 
-        ServiceBusSend.getInstance().publish(UUID.randomUUID().toString(), MessageBuilder.testBuilder().build());
+        ServiceBusSend.getInstance().publish(topic, MessageBuilder.testBuilder().build());
 
     }
 
@@ -58,7 +57,7 @@ public class PublisherTest {
                                                             .connectionString(connectionString)
                                                             .build()));
 
-        ServiceBusSend.getInstance().publish(queueName, MessageBuilder.testBuilder().build());
+        ServiceBusSend.getInstance().publish(topic, MessageBuilder.testBuilder().build());
 
     }
 }

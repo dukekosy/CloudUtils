@@ -5,8 +5,10 @@ import com.microsoft.azure.servicebus.primitives.ServiceBusException;
 
 public interface Publisher {
 
-    void publish(String topic, MessageBuilder message) throws ServiceBusException, InterruptedException;
+    void publish(final String topic, final MessageBuilder message) throws ServiceBusException, InterruptedException;
 
-    void publishDelayed(String topic, MessageBuilder message, long delay);
+    void publishDelayed(final String topic, final MessageBuilder message, long delay);
+
+    void closeTopic(final String topic);
 
 }
