@@ -22,7 +22,7 @@ public final class ServiceBusSend implements Publisher {
         return instance;
     }
 
-    public void publish(final String queueName, final MessageBuilder message) throws ServiceBusException, InterruptedException {
+    public void publish(final String topic, final MessageBuilder message) throws ServiceBusException, InterruptedException {
 
         TopicClient sendClient = new TopicClient(new ConnectionStringBuilder(
                 ConfigDev.getInstance()
@@ -31,12 +31,12 @@ public final class ServiceBusSend implements Publisher {
                                  () -> new MissingResourceException("Connection string is missing for message : " + message.message(),
                                                                     "Config",
                                                                     "connectionString")).connectionString(),
-                queueName));
+                topic));
 
         sendMessagesAsync(sendClient, message).thenRunAsync(() -> sendClient.closeAsync());
     }
 
-    public void publishDelayed(String queueName, MessageBuilder message, long delay) {
+    public void publishDelayed(String topic, MessageBuilder message, long delay) {
 
     }
 

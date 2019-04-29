@@ -1,5 +1,6 @@
 package org.cloudutils.queues.publisher;
 
+import com.microsoft.azure.servicebus.primitives.MessagingEntityNotFoundException;
 import com.microsoft.azure.servicebus.primitives.ServiceBusException;
 import org.cloudutils.config.ConfigDev;
 import org.cloudutils.config.ServiceBusConfig;
@@ -16,19 +17,24 @@ import java.util.UUID;
 public class PublisherTest {
 
     ConfigDev configDev;
+    String connectionString;
+    String queueName;
+
 
     @Before
     public void setup() {
+        connectionString = "Endpoint=sb://cloudutils.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=QOVVfAJXtfN0NVE2IW9N1Wy13sbXFpXiHdxjM+6SuM0=";
+        queueName = "location";
         configDev = PowerMockito.mock(ConfigDev.class);
 
         Whitebox.setInternalState(ConfigDev.class, "instance", configDev);
     }
 
-    @Test(expected = NullPointerException.class)
-    public void publish_noJsonToPublish_throwsNullPointerException() throws ServiceBusException, InterruptedException {
+    @Ignore("Integration Test")
+    @Test(expected = MessagingEntityNotFoundException.class)
+    public void publish_noJsonToPublish_throwsMessagingEntityNotFound() throws ServiceBusException, InterruptedException {
         PowerMockito.when(configDev.getServiceBusConfig()).thenReturn(Optional.of(ServiceBusConfig.testBuilder()
-                                                                                                  .connectionString(
-                                                                                                          "Endpoint=sb://abc.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=<AccessKey>")
+                                                                                                  .connectionString(connectionString)
                                                                                                   .build()));
         ServiceBusSend.getInstance().publish(UUID.randomUUID().toString(), MessageBuilder.testBuilder().message("").build());
     }
@@ -49,11 +55,10 @@ public class PublisherTest {
 
         PowerMockito.when(configDev.getServiceBusConfig())
                     .thenReturn(Optional.of(ServiceBusConfig.testBuilder()
-                                                            .connectionString(
-                                                                    "Endpoint=sb://cloudutils.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=/123/4/5678")
+                                                            .connectionString(connectionString)
                                                             .build()));
 
-        ServiceBusSend.getInstance().publish("location", MessageBuilder.testBuilder().build());
+        ServiceBusSend.getInstance().publish(queueName, MessageBuilder.testBuilder().build());
 
     }
 }
